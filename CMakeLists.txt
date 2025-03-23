@@ -7,7 +7,7 @@ endif()
 
 project(binkstub VERSION 1.0.0 LANGUAGES C)
 
-add_library(binkstub SHARED bink.c bink.def)
+add_library(binkstub SHARED bink.c)
 set_target_properties(binkstub PROPERTIES OUTPUT_NAME binkw32)
 set_target_properties(binkstub PROPERTIES SOVERSION 1.0 VERSION 1.0.0)
 target_include_directories(binkstub PUBLIC
