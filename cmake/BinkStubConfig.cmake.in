@@ -1,0 +1,11 @@
+include("${CMAKE_CURRENT_LIST_DIR}/BinkStubTargets.cmake")
+
+if(NOT TARGET Bink::Bink)
+  if(CMAKE_VERSION VERSION_LESS "3.18")
+    # Aliasing local targets is not supported on CMake < 3.18, so make it global.
+    add_library(Bink::Bink INTERFACE IMPORTED)
+    set_target_properties(Bink::Bink PROPERTIES INTERFACE_LINK_LIBRARIES "BinkStub::BinkStub")
+  else()
+    add_library(Bink::Bink ALIAS BinkStub::BinkStub)
+  endif()
+endif()
