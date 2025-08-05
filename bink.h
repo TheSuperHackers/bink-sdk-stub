@@ -30,6 +30,7 @@
 #define BINKEXPORT __declspec(dllimport)
 #endif
 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
