@@ -10,6 +10,20 @@ project(binkstub VERSION 1.0.0 LANGUAGES C)
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
+# Ensure CMAKE_DLLTOOL is available for MinGW builds
+if(MINGW AND NOT CMAKE_DLLTOOL)
+    find_program(CMAKE_DLLTOOL
+        NAMES
+            ${CMAKE_C_COMPILER_TARGET}-dlltool
+            i686-w64-mingw32-dlltool
+            x86_64-w64-mingw32-dlltool
+            dlltool
+    )
+    if(NOT CMAKE_DLLTOOL)
+        message(WARNING "CMAKE_DLLTOOL not found. Import library may have incorrect symbol decoration. Please set CMAKE_DLLTOOL in your toolchain file.")
+    endif()
+endif()
+
 add_library(binkstub SHARED bink.c)
 add_library(BinkStub::BinkStub ALIAS binkstub)
 if(NOT TARGET Bink::Bink)
