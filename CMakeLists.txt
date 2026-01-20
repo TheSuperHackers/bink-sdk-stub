@@ -18,9 +18,20 @@ endif()
 if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     if(MINGW)
         target_sources(binkstub PRIVATE bink_mingw.def)
+        # Regenerate import library with correct underscore handling
+        add_custom_command(TARGET binkstub POST_BUILD
+            COMMAND ${CMAKE_DLLTOOL} --no-leading-underscore 
+                -D $<TARGET_FILE_NAME:binkstub>
+                -d ${CMAKE_CURRENT_SOURCE_DIR}/bink_mingw.def
+                -l $<TARGET_LINKER_FILE:binkstub>
+            COMMENT "Regenerating import library with correct symbols"
+        )
+    else()
+        set_target_properties(binkstub PROPERTIES DEFINE_SYMBOL "BINKDLL")
     endif()
+else()
+    set_target_properties(binkstub PROPERTIES DEFINE_SYMBOL "BINKDLL")
 endif()
-set_target_properties(binkstub PROPERTIES DEFINE_SYMBOL "BINKDLL")
 set_target_properties(binkstub PROPERTIES PUBLIC_HEADER "bink.h")
 set_target_properties(binkstub PROPERTIES EXPORT_NAME "BinkStub")
 set_target_properties(binkstub PROPERTIES OUTPUT_NAME binkw32)
