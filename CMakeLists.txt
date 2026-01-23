@@ -33,23 +33,25 @@ if(WIN32)
     set_target_properties(binkstub PROPERTIES PREFIX "")
 endif()
 
-install(TARGETS binkstub EXPORT BinkStubExports)
-if(MSVC)
-    set(cmake_install_cfgdir "cmake")
-else()
-    set(cmake_install_cfgdir "${CMAKE_INSTALL_LIBDIR}/cmake/BinkStub")
+if(binkstub_IS_TOP_LEVEL)
+    install(TARGETS binkstub EXPORT BinkStubExports)
+    if(MSVC)
+        set(cmake_install_cfgdir "cmake")
+    else()
+        set(cmake_install_cfgdir "${CMAKE_INSTALL_LIBDIR}/cmake/BinkStub")
+    endif()
+    configure_package_config_file(cmake/BinkStubConfig.cmake.in BinkStubConfig.cmake
+        NO_SET_AND_CHECK_MACRO
+        PATH_VARS CMAKE_INSTALL_PREFIX
+        INSTALL_DESTINATION "${cmake_install_cfgdir}"
+    )
+    export(TARGETS binkstub NAMESPACE "BinkStub::" FILE "BinkStubTargets.cmake")
+    install(EXPORT BinkStubExports
+        NAMESPACE "BinkStub::"
+        DESTINATION "${cmake_install_cfgdir}"
+        FILE "BinkStubTargets.cmake"
+    )
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/BinkStubConfig.cmake"
+        DESTINATION "${cmake_install_cfgdir}"
+    )
 endif()
-configure_package_config_file(cmake/BinkStubConfig.cmake.in BinkStubConfig.cmake
-    NO_SET_AND_CHECK_MACRO
-    PATH_VARS CMAKE_INSTALL_PREFIX
-    INSTALL_DESTINATION "${cmake_install_cfgdir}"
-)
-export(TARGETS binkstub NAMESPACE "BinkStub::" FILE "BinkStubTargets.cmake")
-install(EXPORT BinkStubExports
-    NAMESPACE "BinkStub::"
-    DESTINATION "${cmake_install_cfgdir}"
-    FILE "BinkStubTargets.cmake"
-)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/BinkStubConfig.cmake"
-    DESTINATION "${cmake_install_cfgdir}"
-)
